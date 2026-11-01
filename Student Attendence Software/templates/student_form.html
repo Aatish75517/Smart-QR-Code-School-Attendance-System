@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_edit %}Edit Student{% else %}Register Student{% endif %} - {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+        <div class="school-card">
+            
+            <div class="school-card-header">
+                <div>
+                    <h5 class="school-card-title">{% if is_edit %}Edit Student Record{% else %}Student Registration{% endif %}</h5>
+                    <small class="text-muted">
+                        {% if is_edit %}
+                            Update record for {{ student.name }} ({{ student.student_id }})
+                        {% else %}
+                            A unique QR code is automatically generated for every new student.
+                        {% endif %}
+                    </small>
+                </div>
+                <a href="{{ url_for('students_list') }}" class="btn btn-outline-secondary btn-sm" style="border-radius: 6px;">
+                    &larr; Back to List
+                </a>
+            </div>
+
+            <form method="POST">
+                <div class="row g-3">
+                    
+                    <!-- Student ID -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary">Student ID <span class="text-danger">*</span></label>
+                        <input type="text" name="student_id" class="form-control font-monospace" placeholder="e.g. STD-2026-120" value="{{ student.student_id if student else '' }}" {% if is_edit %}readonly style="background-color: #f1f5f9;"{% else %}required autofocus{% endif %}>
+                        <small class="text-muted" style="font-size: 11px;">Unique identifier (e.g. STD-2026-101)</small>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary">Student Full Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. John Doe" value="{{ student.name if student else '' }}" required>
+                    </div>
+
+                    <!-- Class / Grade -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary">Class / Grade <span class="text-danger">*</span></label>
+                        <input type="text" name="student_class" class="form-control" placeholder="e.g. Grade 10" value="{{ student.student_class if student else '' }}" required list="classList">
+                        <datalist id="classList">
+                            <option value="Grade 9">
+                            <option value="Grade 10">
+                            <option value="Grade 11">
+                            <option value="Grade 12">
+                        </datalist>
+                    </div>
+
+                    <!-- Section -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary">Section</label>
+                        <input type="text" name="section" class="form-control" placeholder="e.g. A" value="{{ student.section if student else 'A' }}">
+                    </div>
+
+                    <!-- Contact Email -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary">Guardian Email</label>
+                        <input type="email" name="contact_email" class="form-control" placeholder="guardian@example.com" value="{{ student.contact_email if student else '' }}">
+                    </div>
+
+                    <!-- Guardian Phone -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary">Guardian Phone</label>
+                        <input type="text" name="guardian_phone" class="form-control" placeholder="+1 555-0123" value="{{ student.guardian_phone if student else '' }}">
+                    </div>
+
+                    <!-- Status (If Edit) -->
+                    {% if is_edit %}
+                    <div class="col-12">
+                        <label class="form-label small fw-semibold text-secondary">Account Status</label>
+                        <select name="account_status" class="form-select">
+                            <option value="Active" {% if student.account_status == 'Active' %}selected{% endif %}>Active</option>
+                            <option value="Inactive" {% if student.account_status == 'Inactive' %}selected{% endif %}>Inactive (Deactivated)</option>
+                        </select>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('students_list') }}" class="btn btn-outline-secondary" style="border-radius: 8px;">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-4 fw-semibold" style="border-radius: 8px;">
+                        {% if is_edit %}Save Changes{% else %}Register Student & Generate QR{% endif %}
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

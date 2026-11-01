@@ -1,0 +1,780 @@
+/* ===================================================================
+   SCHOOL ATTENDANCE SYSTEM - CLEAN, REALISTIC SCHOOL PORTAL STYLING
+   Authentic, human-crafted design (Clean Academic Navy & Crisp Whites)
+   =================================================================== */
+
+:root {
+    --primary-color: #1e40af;       /* Classic Academic Royal Blue */
+    --primary-hover: #1d4ed8;
+    --primary-light: #eff6ff;
+    --dark-navy: #0f172a;
+    --bg-main: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --success: #15803d;             /* Realistic School Green */
+    --warning: #b45309;             /* Realistic School Amber */
+    --danger: #b91c1c;              /* Realistic School Red */
+}
+
+/* Base Setup */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+}
+
+/* Navbar */
+.school-navbar {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.school-brand {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--primary-color) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.3px;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: #475569 !important;
+    padding: 8px 16px !important;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
+    background-color: var(--primary-light);
+}
+
+.nav-link.active {
+    color: var(--primary-color) !important;
+    background-color: var(--primary-light);
+    font-weight: 600;
+}
+
+/* Clean Cards */
+.school-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.school-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.school-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--dark-navy);
+    margin: 0;
+}
+
+/* Stat KPI Blocks */
+.kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.kpi-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.kpi-number {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--dark-navy);
+}
+
+.kpi-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Tables */
+.school-table {
+    margin-bottom: 0;
+}
+
+.school-table thead th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 16px;
+}
+
+.school-table tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Badges */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-present {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.status-late {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.status-absent {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ===================================================================
+   NATURAL, CLEAN SCANNER VIEWPORT (NO OVER-THE-TOP SCI-FI LASERS)
+   =================================================================== */
+
+.scanner-box {
+    background: #111827;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    max-width: 520px;
+    margin: 0 auto;
+    border: 2px solid #374151;
+}
+
+#reader {
+    width: 100% !important;
+    border: none !important;
+}
+
+#reader video {
+    width: 100% !important;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.scanner-guide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 220px;
+    border: 2px dashed #60a5fa;
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+/* Result Notifications */
+.scan-alert {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.scan-alert-success {
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+}
+
+.scan-alert-warning {
+    background-color: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+
+.scan-alert-error {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+/* ===================================================================
+   AUTHENTIC STUDENT SMART ID CARD (STANDARD CR80 PVC SIZE)
+   Standard CR80 dimensions: 54mm x 85.6mm (Portrait) or 85.6mm x 54mm (Landscape)
+   Matches international plastic PVC ID card standards
+   =================================================================== */
+
+/* Cut Guide Container (Shows cut line preview on screen and in print) */
+.pvc-cut-guide-container {
+    display: inline-block;
+    padding: 10px;
+    border: 1.5px dashed #94a3b8;
+    border-radius: 14px;
+    background: #f8fafc;
+    position: relative;
+    margin: 10px auto;
+}
+
+.pvc-cut-guide-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    letter-spacing: 0.3px;
+}
+
+/* Portrait Card (CR80: 54mm x 85.6mm) */
+.pvc-card-portrait {
+    width: 270px;
+    height: 428px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pvc-card-portrait .id-card-header {
+    background: var(--primary-color);
+    color: #ffffff;
+    padding: 10px 8px;
+}
+
+.pvc-card-portrait .id-school-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.pvc-card-portrait .id-card-subtitle {
+    font-size: 8.5px;
+    color: #bfdbfe;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.pvc-card-portrait .id-card-body {
+    padding: 8px 12px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.pvc-card-portrait .id-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 4px;
+    border: 2.5px solid #bfdbfe;
+}
+
+.pvc-card-portrait .id-student-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-navy);
+    line-height: 1.2;
+    margin-bottom: 2px;
+}
+
+.pvc-card-portrait .id-student-code {
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary-color);
+    background: #eff6ff;
+    padding: 2px 8px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.pvc-card-portrait .id-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 6px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 8px;
+    margin-bottom: 4px;
+    font-size: 11px;
+    text-align: left;
+    width: 100%;
+}
+
+.pvc-card-portrait .id-info-label {
+    color: var(--text-muted);
+    font-size: 8.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.pvc-card-portrait .id-info-val {
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.pvc-card-portrait .id-qr-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 3px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.pvc-card-portrait .id-qr-box img {
+    width: 72px;
+    height: 72px;
+    display: block;
+}
+
+.pvc-card-portrait .id-card-footer {
+    background: #f1f5f9;
+    padding: 4px 8px;
+    font-size: 8.5px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    line-height: 1.2;
+}
+
+/* Landscape Card (CR80: 85.6mm x 54mm) */
+.pvc-card-landscape {
+    width: 428px;
+    height: 270px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pvc-card-landscape .id-card-header {
+    background: var(--primary-color);
+    color: #ffffff;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pvc-card-landscape .id-school-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.pvc-card-landscape .id-card-subtitle {
+    font-size: 8.5px;
+    color: #bfdbfe;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.pvc-card-landscape .id-card-body {
+    padding: 8px 12px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.pvc-card-landscape .landscape-left {
+    flex: 1;
+    text-align: left;
+}
+
+.pvc-card-landscape .landscape-identity-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.pvc-card-landscape .id-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: var(--primary-color);
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #bfdbfe;
+    flex-shrink: 0;
+}
+
+.pvc-card-landscape .id-student-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-navy);
+    line-height: 1.2;
+}
+
+.pvc-card-landscape .id-student-code {
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary-color);
+    background: #eff6ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.pvc-card-landscape .id-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 6px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 10.5px;
+}
+
+.pvc-card-landscape .id-info-label {
+    color: var(--text-muted);
+    font-size: 8px;
+    text-transform: uppercase;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.pvc-card-landscape .id-info-val {
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.pvc-card-landscape .landscape-right {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.pvc-card-landscape .id-qr-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 3px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.pvc-card-landscape .id-qr-box img {
+    width: 78px;
+    height: 78px;
+    display: block;
+}
+
+.pvc-card-landscape .id-card-footer {
+    background: #f1f5f9;
+    padding: 4px 12px;
+    font-size: 8.5px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Legacy container alias for backward compatibility */
+.id-card-container {
+    width: 270px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin: 10px auto;
+    text-align: center;
+}
+
+/* ===================================================================
+   PRINT CSS - EXACT 100% SCALE CR80 PVC SIZE (54mm x 85.6mm)
+   Prevents oversized, stretched, or bloated card printing on A4 paper
+   =================================================================== */
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .no-print, .school-navbar, .navbar, .btn, .alert, .card-controls {
+        display: none !important;
+    }
+
+    .pvc-print-wrapper {
+        display: block !important;
+        margin: 10mm auto !important;
+        text-align: center !important;
+        page-break-inside: avoid !important;
+    }
+
+    .pvc-cut-guide-container {
+        display: inline-block !important;
+        padding: 1.5mm !important;
+        border: 0.8px dashed #64748b !important;
+        background: #ffffff !important;
+        border-radius: 3.5mm !important;
+        page-break-inside: avoid !important;
+        box-shadow: none !important;
+        margin: 5mm auto !important;
+    }
+
+    .pvc-cut-guide-label {
+        font-size: 6.5pt !important;
+        color: #64748b !important;
+        margin-bottom: 1.5mm !important;
+        text-align: center !important;
+    }
+
+    /* EXACT CR80 PORTRAIT DIMENSIONS ON A4 PAPER */
+    .pvc-card-portrait, .id-card-container {
+        width: 54mm !important;
+        height: 85.6mm !important;
+        min-width: 54mm !important;
+        max-width: 54mm !important;
+        min-height: 85.6mm !important;
+        max-height: 85.6mm !important;
+        box-sizing: border-box !important;
+        border-radius: 3.18mm !important;
+        border: 0.6px solid #94a3b8 !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
+        margin: 0 auto !important;
+        page-break-inside: avoid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+    }
+
+    .pvc-card-portrait .id-card-header, .id-card-container .id-card-header {
+        padding: 2.2mm 1mm 1.5mm !important;
+    }
+
+    .pvc-card-portrait .id-school-name, .id-card-container .id-school-name {
+        font-size: 7.2pt !important;
+    }
+
+    .pvc-card-portrait .id-card-subtitle, .id-card-container .id-card-subtitle {
+        font-size: 5pt !important;
+    }
+
+    .pvc-card-portrait .id-card-body, .id-card-container .id-card-body {
+        padding: 1.5mm 2mm !important;
+    }
+
+    .pvc-card-portrait .id-avatar, .id-card-container .id-avatar {
+        width: 14mm !important;
+        height: 14mm !important;
+        font-size: 9pt !important;
+        margin-bottom: 1mm !important;
+        border-width: 1px !important;
+    }
+
+    .pvc-card-portrait .id-student-name, .id-card-container .id-student-name {
+        font-size: 8.5pt !important;
+        margin-bottom: 0.5mm !important;
+    }
+
+    .pvc-card-portrait .id-student-code, .id-card-container .id-student-code {
+        font-size: 6.5pt !important;
+        padding: 0.4mm 2mm !important;
+        margin-bottom: 1mm !important;
+    }
+
+    .pvc-card-portrait .id-info-grid, .id-card-container .id-info-grid {
+        padding: 1mm 1.5mm !important;
+        gap: 0.8mm !important;
+        margin-bottom: 1mm !important;
+    }
+
+    .pvc-card-portrait .id-info-label, .id-card-container .id-info-label {
+        font-size: 4.8pt !important;
+    }
+
+    .pvc-card-portrait .id-info-val, .id-card-container .id-info-val {
+        font-size: 5.6pt !important;
+    }
+
+    .pvc-card-portrait .id-qr-box, .id-card-container .id-qr-box {
+        padding: 0.4mm !important;
+    }
+
+    .pvc-card-portrait .id-qr-box img, .id-card-container .id-qr-box img {
+        width: 18.5mm !important;
+        height: 18.5mm !important;
+    }
+
+    .pvc-card-portrait .id-card-footer, .id-card-container .id-card-footer {
+        padding: 1mm !important;
+        font-size: 4.8pt !important;
+    }
+
+    /* EXACT CR80 LANDSCAPE DIMENSIONS ON A4 PAPER */
+    .pvc-card-landscape {
+        width: 85.6mm !important;
+        height: 54mm !important;
+        min-width: 85.6mm !important;
+        max-width: 85.6mm !important;
+        min-height: 54mm !important;
+        max-height: 54mm !important;
+        box-sizing: border-box !important;
+        border-radius: 3.18mm !important;
+        border: 0.6px solid #94a3b8 !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
+        margin: 0 auto !important;
+        page-break-inside: avoid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+    }
+
+    .pvc-card-landscape .id-card-header {
+        padding: 1.5mm 3mm !important;
+    }
+
+    .pvc-card-landscape .id-school-name {
+        font-size: 8pt !important;
+    }
+
+    .pvc-card-landscape .id-card-subtitle {
+        font-size: 5pt !important;
+    }
+
+    .pvc-card-landscape .id-card-body {
+        padding: 1.5mm 3mm !important;
+        gap: 2mm !important;
+    }
+
+    .pvc-card-landscape .id-avatar {
+        width: 13mm !important;
+        height: 13mm !important;
+        font-size: 8.5pt !important;
+    }
+
+    .pvc-card-landscape .id-student-name {
+        font-size: 8.5pt !important;
+    }
+
+    .pvc-card-landscape .id-student-code {
+        font-size: 6.5pt !important;
+    }
+
+    .pvc-card-landscape .id-info-grid {
+        padding: 1mm 1.5mm !important;
+        font-size: 5.2pt !important;
+    }
+
+    .pvc-card-landscape .id-qr-box img {
+        width: 20mm !important;
+        height: 20mm !important;
+    }
+
+    .pvc-card-landscape .id-card-footer {
+        padding: 1mm 3mm !important;
+        font-size: 4.8pt !important;
+    }
+
+    /* Batch Printing Grid on A4 Sheet */
+    .bulk-print-sheet {
+        display: grid !important;
+        grid-template-columns: repeat(3, 54mm) !important;
+        gap: 4mm 6mm !important;
+        justify-content: center !important;
+        margin: 0 auto !important;
+        page-break-inside: avoid !important;
+    }
+    
+    .bulk-print-sheet-landscape {
+        display: grid !important;
+        grid-template-columns: repeat(2, 85.6mm) !important;
+        gap: 4mm 8mm !important;
+        justify-content: center !important;
+        margin: 0 auto !important;
+        page-break-inside: avoid !important;
+    }
+}

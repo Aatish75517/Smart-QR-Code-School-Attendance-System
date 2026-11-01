@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - {{ school_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body style="background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+
+    <div style="width: 100%; max-width: 420px; padding: 20px;">
+        <div class="school-card p-4 shadow-sm" style="border-radius: 12px;">
+            
+            <!-- School Emblem & Title -->
+            <div class="text-center mb-4">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background-color: #eff6ff; color: #1e40af; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 12px; border: 2px solid #bfdbfe;">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <h4 class="fw-bold mb-1" style="color: #0f172a;">{{ school_name }}</h4>
+                <p class="text-muted small mb-0">Student Attendance Management Portal</p>
+            </div>
+
+            <!-- Flash Alert Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show small py-2" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Login Form -->
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Admin Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+                        <input type="text" name="username" id="usernameInput" class="form-control" placeholder="admin" required autofocus>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold text-secondary">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+                        <input type="password" name="password" id="passwordInput" class="form-control" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold mb-3" style="border-radius: 8px;">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Portal
+                </button>
+
+                <!-- Demo Auto Fill Button -->
+                <button type="button" id="autoFillBtn" class="btn btn-outline-secondary btn-sm w-100 py-2" style="border-radius: 8px;">
+                    <i class="bi bi-magic me-1"></i> Auto-Fill Demo Credentials (admin / admin123)
+                </button>
+            </form>
+
+            <div class="text-center mt-4 pt-3 border-top">
+                <a href="{{ url_for('scanner') }}" class="text-decoration-none small text-primary fw-semibold">
+                    <i class="bi bi-camera-video me-1"></i> Open Attendance Scanner Station &rarr;
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('autoFillBtn').addEventListener('click', function() {
+            document.getElementById('usernameInput').value = 'admin';
+            document.getElementById('passwordInput').value = 'admin123';
+        });
+    </script>
+</body>
+</html>

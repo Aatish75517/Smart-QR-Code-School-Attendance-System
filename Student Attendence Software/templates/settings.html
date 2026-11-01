@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}System Settings - {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-12">
+        <h3 class="fw-bold mb-1" style="color: #0f172a;">School System Settings</h3>
+        <p class="text-muted mb-0 small">Manage school branding and administrator password</p>
+    </div>
+</div>
+
+<div class="row g-4 justify-content-center">
+    <!-- Password Change Card -->
+    <div class="col-lg-6">
+        <div class="school-card">
+            <h5 class="school-card-title mb-3">Change Administrator Password</h5>
+
+            <form method="POST" action="{{ url_for('settings_page') }}">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">New Password</label>
+                    <input type="password" name="new_password" class="form-control" placeholder="••••••••" required minlength="4">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold text-secondary">Confirm New Password</label>
+                    <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required minlength="4">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="border-radius: 8px;">
+                    <i class="bi bi-key-fill me-1"></i> Update Password
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- System Info Card -->
+    <div class="col-lg-6">
+        <div class="school-card">
+            <h5 class="school-card-title mb-3">System Information</h5>
+
+            <table class="table table-sm border-0 mb-0">
+                <tr>
+                    <td class="text-muted" style="width: 150px;">School Name:</td>
+                    <td class="fw-semibold">{{ school_name }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Academic Session:</td>
+                    <td>{{ academic_year }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Attendance Cutoff:</td>
+                    <td><span class="badge bg-warning-subtle text-warning">08:30 AM (Late after this)</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Database Engine:</td>
+                    <td>SQLite 3 (attendance.db)</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Web Framework:</td>
+                    <td>Python Flask</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">QR Engine:</td>
+                    <td>Python <code>qrcode</code> + Pillow</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Camera Vision:</td>
+                    <td>HTML5 Webcam API + OpenCV</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

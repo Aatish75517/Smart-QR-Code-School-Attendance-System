@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance Records - {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-md-6">
+        <h3 class="fw-bold mb-1" style="color: #0f172a;">Daily Attendance Records</h3>
+        <p class="text-muted mb-0 small">Attendance roster for <strong>{{ selected_date }}</strong></p>
+    </div>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+        <a href="{{ url_for('export_docx', date=selected_date) }}" class="btn btn-outline-primary d-inline-flex align-items-center gap-1" style="border-radius: 8px;">
+            <i class="bi bi-file-earmark-word-fill"></i> Export Word (.docx)
+        </a>
+        <a href="{{ url_for('export_csv', date=selected_date) }}" class="btn btn-outline-success d-inline-flex align-items-center gap-1" style="border-radius: 8px;">
+            <i class="bi bi-file-earmark-spreadsheet-fill"></i> Export CSV
+        </a>
+        <button type="button" class="btn btn-primary d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#manualModal" style="border-radius: 8px;">
+            <i class="bi bi-plus-circle"></i> Manual Entry
+        </button>
+    </div>
+</div>
+
+<!-- Date & Filters Bar -->
+<div class="school-card p-3 mb-4">
+    <form method="GET" action="{{ url_for('attendance_list') }}" class="row g-2 align-items-center">
+        
+        <div class="col-md-3 col-sm-6">
+            <label class="form-label small fw-semibold text-muted mb-1">Select Date:</label>
+            <input type="date" name="date" class="form-control" value="{{ selected_date }}" onchange="this.form.submit()">
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <label class="form-label small fw-semibold text-muted mb-1">Class Filter:</label>
+            <select name="class" class="form-select" onchange="this.form.submit()">
+                <option value="All" {% if current_class == 'All' %}selected{% endif %}>All Classes</option>
+                {% for c in classes %}
+                    <option value="{{ c }}" {% if current_class == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <label class="form-label small fw-semibold text-muted mb-1">Status Filter:</label>
+            <select name="status" class="form-select" onchange="this.form.submit()">
+                <option value="All" {% if current_status == 'All' %}selected{% endif %}>All Statuses</option>
+                <option value="Present" {% if current_status == 'Present' %}selected{% endif %}>Present Only</option>
+                <option value="Late" {% if current_status == 'Late' %}selected{% endif %}>Late Only</option>
+                <option value="Absent" {% if current_status == 'Absent' %}selected{% endif %}>Absent Only</option>
+            </select>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <label class="form-label small fw-semibold text-muted mb-1">Search Student:</label>
+            <input type="text" name="q" class="form-control" placeholder="Name or ID..." value="{{ search_query }}">
+        </div>
+
+    </form>
+</div>
+
+<!-- Daily Summary KPI Strip -->
+<div class="row g-3 mb-4 text-center">
+    <div class="col">
+        <div class="kpi-card p-3 justify-content-center">
+            <div>
+                <div class="kpi-number fs-4">{{ date_stats.total }}</div>
+                <div class="kpi-label">Total Expected</div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="kpi-card p-3 justify-content-center">
+            <div>
+                <div class="kpi-number fs-4 text-success">{{ date_stats.present }}</div>
+                <div class="kpi-label text-success">Present</div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="kpi-card p-3 justify-content-center">
+            <div>
+                <div class="kpi-number fs-4 text-warning">{{ date_stats.late }}</div>
+                <div class="kpi-label text-warning">Late</div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="kpi-card p-3 justify-content-center">
+            <div>
+                <div class="kpi-number fs-4 text-danger">{{ date_stats.absent }}</div>
+                <div class="kpi-label text-danger">Absent</div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="kpi-card p-3 justify-content-center">
+            <div>
+                <div class="kpi-number fs-4 text-primary">{{ date_stats.rate }}%</div>
+                <div class="kpi-label text-primary">Turnout Rate</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Attendance Records Table -->
+<div class="school-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table school-table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th>Check-in Time</th>
+                    <th>Verification Method</th>
+                    <th>Status</th>
+                    <th class="text-end">Quick Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if records %}
+                    {% for r in records %}
+                    <tr>
+                        <td class="text-muted">{{ loop.index }}</td>
+                        <td><span class="font-monospace fw-bold text-primary">{{ r.student_id }}</span></td>
+                        <td class="fw-semibold">{{ r.name }}</td>
+                        <td>{{ r.student_class }} ({{ r.section or 'A' }})</td>
+                        <td>{{ r.attendance_time }}</td>
+                        <td>
+                            <span class="badge bg-light text-dark border">{{ r.scan_method }}</span>
+                        </td>
+                        <td>
+                            {% if r.attendance_status == 'Present' %}
+                                <span class="status-badge status-present">Present</span>
+                            {% elif r.attendance_status == 'Late' %}
+                                <span class="status-badge status-late">Late</span>
+                            {% else %}
+                                <span class="status-badge status-absent">Absent</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <form method="POST" action="{{ url_for('manual_mark') }}" class="d-inline">
+                                <input type="hidden" name="student_id" value="{{ r.student_id }}">
+                                <input type="hidden" name="date" value="{{ selected_date }}">
+                                {% if r.attendance_status == 'Absent' %}
+                                    <input type="hidden" name="status" value="Present">
+                                    <button type="submit" class="btn btn-sm btn-outline-success" style="border-radius: 6px;">
+                                        Mark Present
+                                    </button>
+                                {% else %}
+                                    <input type="hidden" name="status" value="Absent">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" style="border-radius: 6px;">
+                                        Mark Absent
+                                    </button>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                            <div>No attendance records for date: {{ selected_date }}</div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal: Manual Mark Attendance -->
+<div class="modal fade" id="manualModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 12px;">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Manual Attendance Entry</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('manual_mark') }}">
+                <div class="modal-body">
+                    <input type="hidden" name="date" value="{{ selected_date }}">
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Student ID</label>
+                        <input type="text" name="student_id" class="form-control" placeholder="e.g. STD-2026-101" required autofocus>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Attendance Date</label>
+                        <input type="date" name="date" class="form-control" value="{{ selected_date }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="Present" selected>Present (On Time)</option>
+                            <option value="Late">Late (Tardy)</option>
+                            <option value="Absent">Absent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 6px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="border-radius: 6px;">Save Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+
+{% block title %}ID Card - {{ student.name }} - {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    
+    <!-- Printable Card Preview Section -->
+    <div class="col-md-7 col-lg-6 text-center">
+        
+        <!-- Standard PVC Card Info Bar (No-Print) -->
+        <div class="no-print mb-3 d-flex flex-wrap align-items-center justify-content-between gap-2 p-2 bg-white rounded-3 border">
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary px-2.5 py-1.5 fs-7">
+                    <i class="bi bi-credit-card-2-front-fill me-1"></i> Standard CR80 PVC
+                </span>
+                <small class="text-muted fw-semibold">Exact 54mm × 85.6mm (ATM / PVC Card Size)</small>
+            </div>
+            <!-- Orientation Toggle Buttons -->
+            <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-outline-primary active" id="btnPortrait" onclick="switchOrientation('portrait')">
+                    <i class="bi bi-phone me-1"></i> Vertical Badge
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="btnLandscape" onclick="switchOrientation('landscape')">
+                    <i class="bi bi-credit-card me-1"></i> Horizontal Card
+                </button>
+            </div>
+        </div>
+
+        <!-- Print Wrapper with Cut Guide -->
+        <div class="pvc-print-wrapper text-center">
+            <div class="pvc-cut-guide-container">
+                <div class="pvc-cut-guide-label">
+                    <i class="bi bi-scissors"></i> Cut along dashed line for Standard PVC / Badge Sleeve (54mm × 85.6mm)
+                </div>
+
+                <!-- 1. PORTRAIT CARD (54mm x 85.6mm) -->
+                <div id="portraitCard" class="pvc-card-portrait id-card-container">
+                    <!-- Card Header -->
+                    <div class="id-card-header">
+                        <div class="d-flex align-items-center justify-content-center gap-1.5 mb-0.5">
+                            <i class="bi bi-mortarboard-fill fs-6"></i>
+                            <div class="id-school-name">{{ school_name }}</div>
+                        </div>
+                        <div class="id-card-subtitle">Official Student ID Badge</div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="id-card-body">
+                        <!-- Avatar Initials -->
+                        <div class="id-avatar">
+                            {{ student.name[0] }}
+                        </div>
+
+                        <div class="id-student-name">{{ student.name }}</div>
+                        <div class="id-student-code">{{ student.student_id }}</div>
+
+                        <div class="id-info-grid">
+                            <div>
+                                <div class="id-info-label">Class</div>
+                                <div class="id-info-val">{{ student.student_class }}</div>
+                            </div>
+                            <div>
+                                <div class="id-info-label">Section</div>
+                                <div class="id-info-val">{{ student.section or 'A' }}</div>
+                            </div>
+                            <div>
+                                <div class="id-info-label">Academic Year</div>
+                                <div class="id-info-val">{{ academic_year }}</div>
+                            </div>
+                            <div>
+                                <div class="id-info-label">Status</div>
+                                <div class="id-info-val text-success">{{ student.account_status }}</div>
+                            </div>
+                        </div>
+
+                        <!-- QR Code Box -->
+                        <div class="id-qr-box">
+                            <img src="{{ qr_url }}" alt="Student QR Code">
+                        </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="id-card-footer">
+                        Scan daily at school entrance checkpoint. Non-transferable.
+                    </div>
+                </div>
+
+                <!-- 2. LANDSCAPE CARD (85.6mm x 54mm) -->
+                <div id="landscapeCard" class="pvc-card-landscape d-none">
+                    <!-- Header -->
+                    <div class="id-card-header">
+                        <div class="d-flex align-items-center gap-1.5">
+                            <i class="bi bi-mortarboard-fill fs-6"></i>
+                            <span class="id-school-name">{{ school_name }}</span>
+                        </div>
+                        <span class="id-card-subtitle">Official Student ID Badge</span>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="id-card-body">
+                        <!-- Left: Student Info -->
+                        <div class="landscape-left">
+                            <div class="landscape-identity-row">
+                                <div class="id-avatar">
+                                    {{ student.name[0] }}
+                                </div>
+                                <div>
+                                    <div class="id-student-name">{{ student.name }}</div>
+                                    <div class="id-student-code">{{ student.student_id }}</div>
+                                </div>
+                            </div>
+
+                            <div class="id-info-grid">
+                                <div>
+                                    <div class="id-info-label">Class</div>
+                                    <div class="id-info-val">{{ student.student_class }} (Sec {{ student.section or 'A' }})</div>
+                                </div>
+                                <div>
+                                    <div class="id-info-label">Academic Year</div>
+                                    <div class="id-info-val">{{ academic_year }}</div>
+                                </div>
+                                <div>
+                                    <div class="id-info-label">Guardian Phone</div>
+                                    <div class="id-info-val">{{ student.guardian_phone or 'N/A' }}</div>
+                                </div>
+                                <div>
+                                    <div class="id-info-label">Status</div>
+                                    <div class="id-info-val text-success">{{ student.account_status }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: QR Code -->
+                        <div class="landscape-right">
+                            <div class="id-qr-box">
+                                <img src="{{ qr_url }}" alt="Student QR Code">
+                            </div>
+                            <div class="text-muted fw-bold mt-1" style="font-size: 8px; letter-spacing: 0.5px;">SCAN TO CHECK IN</div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="id-card-footer">
+                        <span>Official Student ID &bull; Non-transferable</span>
+                        <span>{{ school_name }}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Print & Download Action Buttons (Hidden in print) -->
+        <div class="mt-3 no-print d-flex flex-wrap justify-content-center gap-2">
+            <!-- Browser Print Button -->
+            <button onclick="window.print()" class="btn btn-primary px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1.5" style="border-radius: 8px;">
+                <i class="bi bi-printer-fill"></i> Print ID Card (Exact PVC Size)
+            </button>
+
+            <!-- Download PDF Dropdown -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1.5" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 8px;">
+                    <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
+                </button>
+                <ul class="dropdown-menu shadow">
+                    <li><h6 class="dropdown-header text-uppercase">Standard PVC PDF</h6></li>
+                    <li>
+                        <a id="pdfA4Link" class="dropdown-item d-flex align-items-center gap-2" href="{{ url_for('student_id_card_pdf', student_id=student.student_id, orientation='portrait', paper='A4') }}">
+                            <i class="bi bi-file-earmark-text text-primary"></i>
+                            <div>
+                                <div class="fw-semibold">A4 Sheet with Cut Marks (Recommended)</div>
+                                <small class="text-muted">Prints 1:1 scale on regular paper with cutting line</small>
+                            </div>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a id="pdfCR80Link" class="dropdown-item d-flex align-items-center gap-2" href="{{ url_for('student_id_card_pdf', student_id=student.student_id, orientation='portrait', paper='CR80') }}">
+                            <i class="bi bi-credit-card-2-front text-success"></i>
+                            <div>
+                                <div class="fw-semibold">Exact CR80 PVC Size (54mm × 85.6mm)</div>
+                                <small class="text-muted">For direct PVC plastic card printers</small>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Download QR Image -->
+            <a href="{{ qr_url }}" download="{{ student.student_id }}_QR.png" class="btn btn-outline-secondary px-3 py-2" style="border-radius: 8px;" title="Download PNG QR Code">
+                <i class="bi bi-qr-code me-1"></i> QR Image
+            </a>
+        </div>
+
+        <!-- Printing Instructions Alert (No-Print) -->
+        <div class="alert alert-info border-info-subtle mt-3 text-start small no-print d-flex gap-2 align-items-start" style="border-radius: 8px; font-size: 12px;">
+            <i class="bi bi-info-circle-fill fs-5 text-info flex-shrink-0 mt-0.5"></i>
+            <div>
+                <strong>How to print at exact PVC card size on A4 paper:</strong><br>
+                In the print dialog, select <strong>Paper Size: A4</strong> and set <strong>Scale: 100% (Actual Size)</strong>. Cut along the dashed line to fit any standard plastic PVC badge sleeve or ID card holder!
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Student Details Panel -->
+    <div class="col-md-5 col-lg-5 no-print mt-4 mt-md-0">
+        <div class="school-card">
+            <h5 class="school-card-title mb-3">Student Record Details</h5>
+
+            <table class="table table-sm border-0 mb-4">
+                <tr>
+                    <td class="text-muted" style="width: 140px;">Student ID:</td>
+                    <td class="fw-bold font-monospace text-primary">{{ student.student_id }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Full Name:</td>
+                    <td class="fw-semibold">{{ student.name }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Class & Section:</td>
+                    <td>{{ student.student_class }} (Section {{ student.section or 'A' }})</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Guardian Phone:</td>
+                    <td>{{ student.guardian_phone or 'Not provided' }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Guardian Email:</td>
+                    <td>{{ student.contact_email or 'Not provided' }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Account Status:</td>
+                    <td>
+                        <span class="badge {% if student.account_status == 'Active' %}bg-success{% else %}bg-secondary{% endif %}">
+                            {{ student.account_status }}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('student_edit', student_id=student.student_id) }}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px;">
+                    <i class="bi bi-pencil me-1"></i> Edit Details
+                </a>
+                <a href="{{ url_for('scanner') }}" class="btn btn-sm btn-success text-white" style="border-radius: 6px;">
+                    <i class="bi bi-camera-video me-1"></i> Test in Scanner
+                </a>
+                <a href="{{ url_for('students_list') }}" class="btn btn-sm btn-outline-secondary ms-auto" style="border-radius: 6px;">
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+let currentOrientation = 'portrait';
+const studentId = '{{ student.student_id }}';
+
+function switchOrientation(mode) {
+    currentOrientation = mode;
+    const portraitCard = document.getElementById('portraitCard');
+    const landscapeCard = document.getElementById('landscapeCard');
+    const btnPortrait = document.getElementById('btnPortrait');
+    const btnLandscape = document.getElementById('btnLandscape');
+    const pdfA4Link = document.getElementById('pdfA4Link');
+    const pdfCR80Link = document.getElementById('pdfCR80Link');
+
+    if (mode === 'landscape') {
+        portraitCard.classList.add('d-none');
+        landscapeCard.classList.remove('d-none');
+        btnLandscape.classList.add('active');
+        btnPortrait.classList.remove('active');
+    } else {
+        landscapeCard.classList.add('d-none');
+        portraitCard.classList.remove('d-none');
+        btnPortrait.classList.add('active');
+        btnLandscape.classList.remove('active');
+    }
+
+    // Update PDF download URLs with current orientation
+    pdfA4Link.href = `/students/id-card/${studentId}/pdf?orientation=${mode}&paper=A4`;
+    pdfCR80Link.href = `/students/id-card/${studentId}/pdf?orientation=${mode}&paper=CR80`;
+}
+</script>
+{% endblock %}

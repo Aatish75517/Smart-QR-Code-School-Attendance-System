@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Students - {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-md-6">
+        <h3 class="fw-bold mb-1" style="color: #0f172a;">Student Directory</h3>
+        <p class="text-muted mb-0 small">Manage registered students and their attendance QR codes.</p>
+    </div>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+        <a href="{{ url_for('student_add') }}" class="btn btn-primary d-inline-flex align-items-center gap-2" style="border-radius: 8px;">
+            <i class="bi bi-person-plus-fill"></i> Register Student
+        </a>
+        <a href="{{ url_for('bulk_id_cards') }}" class="btn btn-outline-secondary d-inline-flex align-items-center gap-1" style="border-radius: 8px;">
+            <i class="bi bi-card-heading"></i> Batch Print Cards
+        </a>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="school-card p-3 mb-4">
+    <form method="GET" action="{{ url_for('students_list') }}" class="row g-2 align-items-center">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text bg-white text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" name="q" class="form-control" placeholder="Search by student name or ID..." value="{{ search_query }}">
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <select name="class" class="form-select" onchange="this.form.submit()">
+                <option value="All" {% if current_class == 'All' %}selected{% endif %}>All Classes</option>
+                {% for c in classes %}
+                    <option value="{{ c }}" {% if current_class == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <select name="status" class="form-select" onchange="this.form.submit()">
+                <option value="All" {% if current_status == 'All' %}selected{% endif %}>All Statuses</option>
+                <option value="Active" {% if current_status == 'Active' %}selected{% endif %}>Active Only</option>
+                <option value="Inactive" {% if current_status == 'Inactive' %}selected{% endif %}>Inactive Only</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 text-end">
+            <button type="submit" class="btn btn-outline-primary w-100">Filter</button>
+        </div>
+    </form>
+</div>
+
+<!-- Students Table -->
+<div class="school-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table school-table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th>Contact Info</th>
+                    <th>QR Badge</th>
+                    <th>Status</th>
+                    <th class="text-end" style="min-width: 140px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if students %}
+                    {% for s in students %}
+                    <tr>
+                        <td class="text-muted">{{ loop.index }}</td>
+                        <td><span class="font-monospace fw-bold text-primary">{{ s.student_id }}</span></td>
+                        <td class="fw-semibold">{{ s.name }}</td>
+                        <td>{{ s.student_class }} ({{ s.section or 'A' }})</td>
+                        <td class="small text-muted">
+                            {% if s.guardian_phone %}<div><i class="bi bi-telephone me-1"></i>{{ s.guardian_phone }}</div>{% endif %}
+                            {% if s.contact_email %}<div><i class="bi bi-envelope me-1"></i>{{ s.contact_email }}</div>{% endif %}
+                            {% if not s.guardian_phone and not s.contact_email %}-{% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('student_id_card', student_id=s.student_id) }}" class="d-inline-flex align-items-center gap-1 text-decoration-none border p-1 rounded bg-white">
+                                <img src="/static/qrcodes/{{ s.student_id }}.png" alt="QR" style="width: 34px; height: 34px;">
+                                <span class="small text-muted pe-1">View</span>
+                            </a>
+                        </td>
+                        <td>
+                            {% if s.account_status == 'Active' %}
+                                <span class="badge bg-success-subtle text-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ url_for('student_id_card', student_id=s.student_id) }}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px;" title="Print ID Card">
+                                <i class="bi bi-card-text"></i> ID Card
+                            </a>
+                            <a href="{{ url_for('student_edit', student_id=s.student_id) }}" class="btn btn-sm btn-outline-secondary ms-1" style="border-radius: 6px;" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('student_delete', student_id=s.student_id) }}" class="d-inline" onsubmit="return confirm('Delete student {{ s.name }}?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger ms-1" style="border-radius: 6px;" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-people fs-1 d-block mb-2"></i>
+                            <div>No students found.</div>
+                            <a href="{{ url_for('student_add') }}" class="btn btn-sm btn-primary mt-2">Register Student</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="p-3 bg-light border-top text-muted small d-flex justify-content-between">
+        <span>Total Registered: <strong>{{ students|length }}</strong> students</span>
+        <span>QR codes automatically generated upon registration</span>
+    </div>
+</div>
+{% endblock %}

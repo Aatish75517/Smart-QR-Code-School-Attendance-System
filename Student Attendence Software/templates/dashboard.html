@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-md-7">
+        <h3 class="fw-bold mb-1" style="color: #0f172a;">Attendance Dashboard</h3>
+        <p class="text-muted mb-0 small">
+            Date: <strong>{{ stats.today }}</strong> &bull; Academic Year: <strong>{{ academic_year }}</strong>
+        </p>
+    </div>
+    <div class="col-md-5 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+        <a href="{{ url_for('scanner') }}" class="btn btn-primary d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 8px;">
+            <i class="bi bi-camera-video-fill"></i> Take Attendance (Scanner)
+        </a>
+        <a href="{{ url_for('export_docx', date=stats.today) }}" class="btn btn-outline-secondary d-inline-flex align-items-center gap-2 px-3 py-2" style="border-radius: 8px;">
+            <i class="bi bi-file-earmark-word-fill text-primary"></i> Export Word
+        </a>
+    </div>
+</div>
+
+<!-- 5 KPI Cards -->
+<div class="row g-3 mb-4">
+    <!-- Total Students -->
+    <div class="col-md-6 col-lg">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background-color: #eff6ff; color: #1e40af;">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <div class="kpi-number">{{ stats.total }}</div>
+                <div class="kpi-label">Total Enrolled</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Present Today -->
+    <div class="col-md-6 col-lg">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background-color: #dcfce7; color: #15803d;">
+                <i class="bi bi-person-check-fill"></i>
+            </div>
+            <div>
+                <div class="kpi-number text-success">{{ stats.present }}</div>
+                <div class="kpi-label">Present (On Time)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Late Today -->
+    <div class="col-md-6 col-lg">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background-color: #fef3c7; color: #b45309;">
+                <i class="bi bi-alarm-fill"></i>
+            </div>
+            <div>
+                <div class="kpi-number text-warning">{{ stats.late }}</div>
+                <div class="kpi-label">Late Arrivals</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Absent Today -->
+    <div class="col-md-6 col-lg">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background-color: #fee2e2; color: #b91c1c;">
+                <i class="bi bi-person-x-fill"></i>
+            </div>
+            <div>
+                <div class="kpi-number text-danger">{{ stats.absent }}</div>
+                <div class="kpi-label">Absent Today</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Turnout Rate -->
+    <div class="col-md-6 col-lg">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background-color: #f1f5f9; color: #475569;">
+                <i class="bi bi-pie-chart-fill"></i>
+            </div>
+            <div>
+                <div class="kpi-number">{{ stats.rate }}%</div>
+                <div class="kpi-label">Turnout Rate</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Scans Table -->
+    <div class="col-lg-8">
+        <div class="school-card">
+            <div class="school-card-header">
+                <div>
+                    <h5 class="school-card-title">Today's Recent Check-ins</h5>
+                    <small class="text-muted">Live student attendance logs recorded today</small>
+                </div>
+                <a href="{{ url_for('attendance_list') }}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px;">
+                    View Complete Log &rarr;
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table school-table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th>Class & Section</th>
+                            <th>Check-in Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_scans %}
+                            {% for r in recent_scans %}
+                            <tr>
+                                <td><span class="font-monospace fw-bold text-primary">{{ r.student_id }}</span></td>
+                                <td class="fw-semibold">{{ r.name }}</td>
+                                <td>{{ r.student_class }} ({{ r.section }})</td>
+                                <td>{{ r.attendance_time }}</td>
+                                <td>
+                                    {% if r.attendance_status == 'Present' %}
+                                        <span class="status-badge status-present">Present</span>
+                                    {% elif r.attendance_status == 'Late' %}
+                                        <span class="status-badge status-late">Late</span>
+                                    {% else %}
+                                        <span class="status-badge status-absent">{{ r.attendance_status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
+                                    No scans recorded yet today. Click "Take Attendance" to begin.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Operations Sidebar -->
+    <div class="col-lg-4">
+        <div class="school-card mb-4">
+            <h5 class="school-card-title mb-3">Quick Actions</h5>
+            
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('student_add') }}" class="btn btn-outline-primary text-start p-3 d-flex align-items-center gap-3" style="border-radius: 8px;">
+                    <i class="bi bi-person-plus-fill fs-4 text-primary"></i>
+                    <div>
+                        <div class="fw-bold">Register Student</div>
+                        <small class="text-muted">Add new student and generate QR</small>
+                    </div>
+                </a>
+
+                <a href="{{ url_for('bulk_id_cards') }}" class="btn btn-outline-secondary text-start p-3 d-flex align-items-center gap-3" style="border-radius: 8px;">
+                    <i class="bi bi-card-heading fs-4 text-secondary"></i>
+                    <div>
+                        <div class="fw-bold">Print Student ID Cards</div>
+                        <small class="text-muted">Batch ID card badges for classes</small>
+                    </div>
+                </a>
+
+                <a href="{{ url_for('export_csv', date=stats.today) }}" class="btn btn-outline-success text-start p-3 d-flex align-items-center gap-3" style="border-radius: 8px;">
+                    <i class="bi bi-file-earmark-spreadsheet-fill fs-4 text-success"></i>
+                    <div>
+                        <div class="fw-bold">Download Excel / CSV</div>
+                        <small class="text-muted">Export today's attendance roster</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="school-card bg-light border-0">
+            <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-info-circle text-primary me-2"></i>System Rules</h6>
+            <ul class="text-muted small ps-3 mb-0">
+                <li class="mb-1"><strong>Duplicate Check:</strong> A student cannot be marked present twice on the same day.</li>
+                <li class="mb-1"><strong>Late Cutoff:</strong> Scans recorded after <strong>08:30 AM</strong> are automatically recorded as <strong>Late</strong>.</li>
+                <li><strong>Inactive Students:</strong> Deactivated student badges are rejected by the scanner.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

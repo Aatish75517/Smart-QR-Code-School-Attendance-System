@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Batch Student ID Badges - {{ school_name }}{% endblock %}
+
+{% block content %}
+<!-- Top Filter & Action Bar -->
+<div class="row align-items-center mb-4 no-print">
+    <div class="col-md-5">
+        <h3 class="fw-bold mb-1" style="color: #0f172a;">Batch Student ID Cards</h3>
+        <p class="text-muted mb-0 small">Standard CR80 PVC size badges ready for printing on A4 sheets</p>
+    </div>
+    <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
+        <!-- Class Filter Form -->
+        <form method="GET" action="{{ url_for('bulk_id_cards') }}" class="d-inline-flex gap-2">
+            <select name="class" class="form-select form-select-sm" onchange="this.form.submit()" style="border-radius: 6px;">
+                <option value="All" {% if current_class == 'All' %}selected{% endif %}>All Classes</option>
+                {% for c in classes %}
+                    <option value="{{ c }}" {% if current_class == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <!-- Download Batch PDF Button -->
+        <a href="{{ url_for('bulk_id_cards_pdf', class=current_class, orientation='portrait') }}" class="btn btn-success btn-sm px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1" style="border-radius: 8px;">
+            <i class="bi bi-file-earmark-pdf-fill"></i> Download Batch PDF (A4)
+        </a>
+
+        <!-- Browser Print Button -->
+        <button onclick="window.print()" class="btn btn-primary btn-sm px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1" style="border-radius: 8px;">
+            <i class="bi bi-printer-fill"></i> Print Batch Sheet
+        </button>
+    </div>
+</div>
+
+<!-- Print Instructions Alert (No-Print) -->
+<div class="alert alert-info border-info-subtle mb-4 no-print d-flex align-items-center gap-2 small" style="border-radius: 8px;">
+    <i class="bi bi-info-circle-fill fs-5 text-info flex-shrink-0"></i>
+    <div>
+        <strong>A4 Batch Printing Guide:</strong> Prints 9 standard (54mm × 85.6mm) PVC badges per A4 page. Ensure print scale is set to <strong>100% (Actual Size)</strong> and cut along the dashed guidelines. For direct download, use the <strong>Download Batch PDF</strong> button above.
+    </div>
+</div>
+
+<!-- Cards Grid -->
+<div class="bulk-print-sheet row g-4 justify-content-center">
+    {% if students %}
+        {% for s in students %}
+        <div class="col-auto">
+            <div class="pvc-cut-guide-container m-0">
+                <div class="pvc-cut-guide-label">
+                    <i class="bi bi-scissors"></i> {{ s.student_id }} (54 × 85.6 mm)
+                </div>
+
+                <div class="pvc-card-portrait id-card-container m-0">
+                    <div class="id-card-header py-2">
+                        <div class="id-school-name" style="font-size: 11px;">{{ school_name }}</div>
+                        <div class="id-card-subtitle" style="font-size: 8px;">Official Student ID Badge</div>
+                    </div>
+
+                    <div class="id-card-body p-2">
+                        <div class="id-avatar" style="width: 50px; height: 50px; font-size: 20px; margin-bottom: 4px;">
+                            {{ s.name[0] }}
+                        </div>
+
+                        <div class="id-student-name" style="font-size: 14px;">{{ s.name }}</div>
+                        <div class="id-student-code" style="font-size: 10px; padding: 2px 6px; margin-bottom: 4px;">{{ s.student_id }}</div>
+
+                        <div class="id-info-grid p-2 mb-2" style="font-size: 10px;">
+                            <div>
+                                <div class="id-info-label" style="font-size: 8px;">Class</div>
+                                <div class="id-info-val">{{ s.student_class }}</div>
+                            </div>
+                            <div>
+                                <div class="id-info-label" style="font-size: 8px;">Section</div>
+                                <div class="id-info-val">{{ s.section or 'A' }}</div>
+                            </div>
+                        </div>
+
+                        <div class="id-qr-box p-1">
+                            <img src="/static/qrcodes/{{ s.student_id }}.png" alt="QR" style="width: 68px; height: 68px;">
+                        </div>
+                    </div>
+
+                    <div class="id-card-footer py-1" style="font-size: 8px;">
+                        Academic Year {{ academic_year }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12 text-center py-5 text-muted">
+            <i class="bi bi-card-heading fs-1 d-block mb-2"></i>
+            <div>No active students found for selected class.</div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
